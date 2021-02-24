@@ -1,0 +1,6 @@
+#After opening the project in Netbeans , Add rs2xml.jar and sqljdbc4.jar in the Project Libraries .
+
+#Login Credentials-
+
+Admin username -admin
+Admin password -1234	

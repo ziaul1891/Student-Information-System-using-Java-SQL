@@ -1,0 +1,114 @@
+
+/*Show StudentId,Student Name, Student Address, Contact Num and their Corresponding Department Name */
+SELECT s.StudentId,(s.FirstName+' '+s.LastName)as Student_Name,s.StudentAddress,s.ContactNum,
+d.DepartmentName FROM STUDENT as s
+JOIN BELONG as b on s.StudentId=b.StudentId 
+JOIN DEPARTMENT as d on b.DepartmentId=d.DepartmentId
+
+
+/*Show StudentId,Student Name, Student BirthDate, Contact Num and their Corresponding Department Name  and also
+show in which floor they attend classes */
+SELECT s.StudentId,(s.FirstName+' '+s.LastName)as Full_Name,s.DateOfBirth,s.ContactNum,
+d.DepartmentName,d.DepartmentFloor FROM STUDENT as s
+JOIN BELONG as b on s.StudentId=b.StudentId 
+JOIN DEPARTMENT as d on b.DepartmentId=d.DepartmentId
+
+
+/*Show only Female StudentId,Student Name and their Corresponding Department Name  and also
+show their department contact number */
+SELECT s.StudentId,(s.FirstName+' '+s.LastName)as Student_Name,s.Gender,
+d.DepartmentName,d.DepartmentContactNum FROM STUDENT as s
+JOIN BELONG as b on s.StudentId=b.StudentId 
+JOIN DEPARTMENT as d on b.DepartmentId=d.DepartmentId
+WHERE s.Gender='F'
+
+
+
+/*Show Female StudentId, Student Full Name and their CGPA where CGPA must be above 3.15 and 
+Student FirstName must start with 'A' */
+SELECT s.StudentId,(s.FirstName+' '+s.LastName)as Student_Name,b.CGPA FROM STUDENT as s 
+JOIN BELONG as b on s.StudentId=b.StudentId 
+JOIN DEPARTMENT as d on b.DepartmentId=d.DepartmentId
+WHERE (b.CGPA>'3.15' AND s.Gender='F') AND s.FirstName LIKE 'A%' 
+
+
+
+
+/*Show Female StudentId, Student Full Name, their Registration date in the taken courses,
+but Registration Date must be within January,2014 and May,2014*/
+SELECT s.StudentId,(s.FirstName+' '+s.LastName)as Full_Name,c.CourseName,r.RegistrationDate 
+FROM STUDENT as s 
+JOIN REGISTRATION as r on s.StudentId=r.StudentId 
+JOIN COURSE as c on r.CourseId=c.CourseId
+WHERE r.RegistrationDate BETWEEN '2014-01-01' AND '2014-05-31'
+
+
+
+/*Show Female StudentId, Student Full Name,Address, and also show Course Credit, Hour for
+Database Course for only the students living in Baily Road*/
+SELECT s.StudentId,(s.FirstName+' '+s.LastName)as Full_Name,s.StudentAddress,c.CourseName,
+c.CourseCredit,c.CourseHour
+FROM STUDENT as s 
+JOIN REGISTRATION as r on s.StudentId=r.StudentId 
+JOIN COURSE as c on r.CourseId=c.CourseId
+WHERE s.StudentAddress IN ('BailyRoad','Firmgate') AND c.CourseName='Database'
+
+
+
+
+
+
+
+/*Show FacultyId,Faculty Name, Salary,Designation, taught Course Name for only Department EEE*/
+SELECT f.FacultyId,f.FacultyName,f.Salary,f.Designation,c.CourseName,d.DepartmentName
+FROM FACULTY as f 
+JOIN TEACH as t on f.FacultyId=t.FacultyId
+JOIN COURSE as c on t.CourseId=c.CourseId
+JOIN OFFER as o on c.CourseId=o.CourseId
+JOIN DEPARTMENT as d on o.DepartmentId=d.DepartmentId
+WHERE d.DepartmentName='EEE' 
+
+
+
+
+/*Show FacultyId,Faculty Name, Designation,taught Course Name for those whose salary is below 60000*/
+SELECT f.FacultyId,f.FacultyName,f.Salary,f.Designation,c.CourseName
+FROM FACULTY as f 
+JOIN TEACH as t on f.FacultyId=t.FacultyId
+JOIN COURSE as c on t.CourseId=c.CourseId
+JOIN OFFER as o on c.CourseId=o.CourseId
+WHERE f.Salary < 60000
+
+
+
+/*Show FacultyId,Faculty Name, Salary,taught Course Name for those who are Lecturer or who 
+teaches Machine*/
+SELECT f.FacultyId,f.FacultyName,f.Salary,f.Designation,c.CourseName
+FROM FACULTY as f 
+JOIN TEACH as t on f.FacultyId=t.FacultyId
+JOIN COURSE as c on t.CourseId=c.CourseId
+JOIN OFFER as o on c.CourseId=o.CourseId
+WHERE f.Designation='Lecturer' or c.CourseName='Machine'
+
+
+
+
+/*Show Sum of Salary for Faculty Members for individual Departments */
+
+SELECT d.DepartmentName,SUM(f.Salary)as SUM_of_Salary FROM FACULTY as f
+JOIN EMPLOYS as e on f.FacultyId=e.FacultyId
+JOIN DEPARTMENT as d on e.DepartmentId=d.DepartmentId
+GROUP BY d.DepartmentName
+
+
+
+/*Show average of Course Credit for Courses  for individual Departments */
+SELECT d.DepartmentName,Avg(c.CourseCredit)as SUM_Credit FROM COURSE as c
+JOIN OFFER as o on c.CourseId=o.CourseId
+JOIN DEPARTMENT as d on o.DepartmentId=d.DepartmentId
+GROUP BY d.DepartmentName
+
+/*Show the maximum CGPA from each Department*/
+SELECT d.DepartmentName,MAX(b.CGPA)as MAX_CGPA FROM BELONG as b
+JOIN DEPARTMENT as d on b.DepartmentId=d.DepartmentId
+GROUP BY d.DepartmentName
